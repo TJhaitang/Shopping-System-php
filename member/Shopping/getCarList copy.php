@@ -26,9 +26,10 @@ while(($aoc=mysqli_fetch_assoc($result))!=NULL){
         $imgPath['photo']="http://60.205.226.34/php/repo/default.png";
     }
     $aoc['image']=$imgPath['photo'];
-    // $aoc['num']=number_format($aoc['num']);
-    // $aoc['price']=number_format($aoc['price'],2);
+    $aoc['num']=number_format($aoc['num']);
+    $aoc['price']=number_format($aoc['price'],2);
     $carList[$carNum]=$aoc;
+    echo json_encode($aoc);
 }
 $carList['carNum']=$carNum;
 echo json_encode($carList);

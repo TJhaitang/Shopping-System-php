@@ -7,9 +7,9 @@ $uid=getUidFromHttp("V");
 $params=json_decode(file_get_contents("php://input"),true);
 /******* */
 
-$sql="INSERT INTO car (num,user_id,item_id) VALUE (".$params['num'].",".$uid.",".$params['item_id'].");";
+$sql="INSERT INTO address (address,consignee,phone,vuid) VALUE ('".$params['address']."','".$params['consignee']."','".$params['phone']."',".$uid.");";
 if(!mysqli_query($conn,$sql)){
-    echo json_encode(array("status"=>"fail"));
+    echo json_encode(array("status"=>$sql));
 }
 else{
     echo json_encode(array("status"=>"success"));

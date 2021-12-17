@@ -8,7 +8,7 @@ $params=json_decode(file_get_contents("php://input"), true);
 $conn=connect();
 /**************/
 /**************/
-if($params['operation']=='delete'){//未测试！
+if($params['operation']=='delete'){
     $deleteSql="DELETE FROM car WHERE id='".$params['carId']."' AND user_id=".$uid.";";
     // echo $deleteSql;
     // exit;

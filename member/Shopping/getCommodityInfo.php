@@ -2,7 +2,8 @@
 include "../../src/mysql.php";
 include "../../src/jwtTools.php";
 $conn=connect();
-$uid=getUidFromHttp("V");
+//不要这个以允许商家token访问
+// $uid=getUidFromHttp("V");
 $params=json_decode(file_get_contents("php://input"),true);
 /**************/
 /**************/
