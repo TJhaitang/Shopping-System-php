@@ -33,13 +33,18 @@ while(($aoc=mysqli_fetch_assoc($result))!=NULL){
             echo json_encode(array("status"=>"fail"));
             exit;
         }
-        $itemAoc['picture']=$picRes['photo'];
+        $picAoc=mysqli_fetch_assoc($picRes);
+        $picture=$picAoc['photo'];
+        if(!$picture){
+            $picture="http://60.205.226.43/php/repo/default.png";
+        }
+        $itemAoc['picture']=$picture;
         $items[$itemNum]=$itemAoc;
     }
     $items['itemNum']=$itemNum;
     $aoc['items']=$items;
-    // $aoc['num']=number_format($aoc['num']);
-    // $aoc['price']=number_format($aoc['price'],2);
+    $aoc['num']=number_format($aoc['num']);
+    $aoc['price']=number_format($aoc['price'],2);
     $orderList[$orderNum]=$aoc;
 }
 $orderList['orderNum']=$orderNum;

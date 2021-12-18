@@ -23,7 +23,7 @@ $stdArray=$params['domains'];//奶酪，检查一下键对不对
 // echo $stdArray[0]['name'];
 foreach($stdArray as $key=>$value){
     $dm=$value;
-    $stdInsertSql="INSERT INTO standard (price,name,standards,stock,commodityId) VALUES (".$dm['sort_price'].",'default','".$dm['name']."',".$dm['sort_inventory'].",'".$commodityId."');";
+    $stdInsertSql="INSERT INTO standard (price,name,standards,stock,commodityId) VALUES (".$dm['sort_price'].",'".$dm['name']."','".$dm['name']."',".$dm['sort_inventory'].",'".$commodityId."');";
     // echo $stdInsertSql."\n";
     if(!mysqli_query($conn,$stdInsertSql)){
         echo json_encode(array("status"=>"fail2"));
@@ -35,9 +35,9 @@ $picArray=$params['domains_pic'];//奶酪，需要进一步的调试
 $imgCount=0;
 foreach($picArray as $key=>$value){
     $imgCount+=1;
-    $photo=savePic($commodityId,$value);
+    // $photo=savePic($commodityId,$value);
     // $photo=1;
-    $sql="INSERT INTO image (photo,commodityId) VALUES ('".$photo."','".$commodityId."');";
+    $sql="INSERT INTO image (photo,commodityId) VALUES ('".$value."','".$commodityId."');";
     // echo $value;
     if(!mysqli_query($conn,$sql)){
         echo json_encode(array("status"=>"fail"));

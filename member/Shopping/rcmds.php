@@ -14,6 +14,7 @@ $sql="SELECT * from shop";
 $result=mysqli_query($conn,$sql);
 if(!$result){
     echo json_encode(array("status"=>"fail"));
+    exit;
 }
 $comList=array();
 $comNum=0;
