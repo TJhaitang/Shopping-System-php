@@ -6,7 +6,7 @@ $conn=connect();
 $uid=getUidFromHttp("V");
 /******* */
 
-$sql1="SELECT * FROM address WHERE vuid=".$uid.";";
+$sql1="SELECT * FROM address WHERE state=0 AND vuid=".$uid.";";
 $result=mysqli_query($conn,$sql1);
 if(!$result){
     echo json_encode(array("status"=>"fail"));

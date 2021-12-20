@@ -6,7 +6,7 @@ $conn=connect();
 $uid=getUidFromHttp("V");
 /******* */
 
-$sql1="SELECT * FROM car_view WHERE useId=".$uid.";";
+$sql1="SELECT * FROM car_view WHERE userId=".$uid.";";
 $result=mysqli_query($conn,$sql1);
 if(!$result){
     echo json_encode(array("status"=>"fail"));

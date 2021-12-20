@@ -13,7 +13,7 @@ if($dt){
     exit;
 }
 else{
-$insertSql="INSERT INTO member (username,password,phone,email) VALUE ('".$params['username']."','".md5($params['password'])."','".$params['phone']."','".$params['email']."');";
+$insertSql="INSERT INTO member (username,password,phone,email,province) VALUE ('".$params['username']."','".md5($params['password'])."','".$params['phone']."','".$params['email']."','".$params['province']."');";
 
 $result2=mysqli_query($conn,$insertSql);
 if($result2)

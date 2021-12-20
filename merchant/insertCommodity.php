@@ -9,13 +9,13 @@ $conn=connect();
 
 //没有进行测试奶酪
 //无法进行规格划分--多加一个规格表
-$commodityId="".$uid.time();
+$commodityId="".$uid.time().md5($params['name']);
 $insertComSql="INSERT INTO commodity (commodityId,description,name,slabel,suid,minus) VALUES ('".
             $commodityId."','".$params['description']."','".
             $params['name']."',".$params['label'].",".$uid.",".($params['ifActivity1']+2*$params['ifActivity2']).");";
 // echo $insertComSql;
 if(!mysqli_query($conn,$insertComSql)){
-    echo json_encode(array("status"=>"fail1"));
+    echo json_encode(array("status"=>$insertComSql));
     exit;
 }
 //向规格表里面插入规格
@@ -37,10 +37,10 @@ foreach($picArray as $key=>$value){
     $imgCount+=1;
     // $photo=savePic($commodityId,$value);
     // $photo=1;
-    $sql="INSERT INTO image (photo,commodityId) VALUES ('".$value."','".$commodityId."');";
+    $sql="INSERT INTO image (photo,commodityId) VALUES ('".$value['photo']."','".$commodityId."');";
     // echo $value;
     if(!mysqli_query($conn,$sql)){
-        echo json_encode(array("status"=>"fail"));
+        echo json_encode(array("status"=>$sql));
         exit;
     }
 }
@@ -49,7 +49,7 @@ if($imgCount==0){
     $sql="INSERT INTO image (photo,commodityId) VALUES ('".$photo."','".$commodityId."');";
     //echo $value;    
     if(!mysqli_query($conn,$sql)){
-        echo json_encode(array("status"=>"fail"));
+        echo json_encode(array("status"=>"fail4"));
         exit;
    }
 }

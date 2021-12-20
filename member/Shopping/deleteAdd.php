@@ -7,7 +7,7 @@ $uid=getUidFromHttp("V");
 $params=json_decode(file_get_contents("php://input"),true);
 /******* */
 
-$sql="DELETE FROM address WHERE add_id=".$params['add_id']." AND vuid=".$uid.";";
+$sql="UPDATE address set state=1 WHERE add_id=".$params['add_id']." AND vuid=".$uid.";";
 if(!mysqli_query($conn,$sql)){
     echo json_encode(array("status"=>"fail"));
 }

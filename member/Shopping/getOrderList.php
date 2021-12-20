@@ -26,7 +26,15 @@ while(($aoc=mysqli_fetch_assoc($result))!=NULL){
     $itemNum=0;
     while(($itemAoc=mysqli_fetch_assoc($result1))!=NULL){
         $itemNum+=1;
-        $comId=$itemAoc['commodityId'];
+        $itemId=$itemAoc['commodityId'];//这里的commodityid是itemid！！！！！！！
+        $comSql="SELECT * from standard WHERE id=".$itemId.";";
+        $comRes=mysqli_query($conn,$comSql);
+        if(!$comRes){
+            echo json_encode(array("status"=>"fail"));
+            exit;
+        }
+        $comAoc=mysqli_fetch_assoc($comRes);
+        $comId=$comAoc['commodityId'];
         $picSql="SELECT photo from shop where commodityId='".$comId."';";
         $picRes=mysqli_query($conn,$picSql);
         if(!$picRes){
