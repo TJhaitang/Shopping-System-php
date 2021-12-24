@@ -12,6 +12,7 @@ $sql="SELECT * from comment WHERE item_id IN (SELECT id FROM standard WHERE comm
 $result=mysqli_query($conn,$sql);
 if(!$result){
     echo json_encode(array("status"=>"fail"));
+    exit;
 }
 else{
     $commentNum=0;

@@ -8,26 +8,31 @@ $params=json_decode(file_get_contents("php://input"), true);
 $conn=connect();
 /**************/
 /**************/
+mysqli_begin_transaction($conn);//开启一个事务
 if($params['operation']=='delete'){//奶酪
     $selectSql="SELECT * FROM commodity WHERE commodityId='".$params['comId']."' AND suid=".$uid.";";
     $deleteSql="DELETE FROM commodity WHERE commodityId='".$params['comId']."' AND suid=".$uid.";";
-    $deleteSql2="DELETE FROM standard where commodityId='".$params['comId']."';";
-    $deleteSql3="DELETE FROM image where commodityId='".$params['comId']."';";
+    // $deleteSql2="DELETE FROM standard where commodityId='".$params['comId']."';";
+    // $deleteSql3="DELETE FROM image where commodityId='".$params['comId']."';";
     // echo $deleteSql;
     // exit;
     $selectRes=mysqli_query($conn,$selectSql);
     if((!$selectRes)|!($aoc=mysqli_fetch_assoc($selectRes))){
         echo json_encode(array("status"=>"fail"));
+        mysqli_rollback($conn);
         exit;
     }
-    $result2=mysqli_query($conn,$deleteSql2);
-    $result3=mysqli_query($conn,$deleteSql3);
+    // $result2=mysqli_query($conn,$deleteSql2);
+    // $result3=mysqli_query($conn,$deleteSql3);
     $result=mysqli_query($conn,$deleteSql);
-    if($result&&$result2&&$result3){
+    if($result/*&&$result2&&$result3*/){
+        mysqli_commit($conn);
         echo json_encode(array("status"=>"success"));
     }
     else{
-        echo json_encode(array("status"=>$deleteSql2));
+        echo json_encode(array("status"=>"fail"));
+        mysqli_rollback($conn);
+        exit;
     }
 }//安全
 else if($params['operation']=='update'){//还需要update库存内容
@@ -42,12 +47,15 @@ else if($params['operation']=='update'){//还需要update库存内容
             // echo $updateStdSql;
             if(!mysqli_query($conn,$updateStdSql)){
                 echo json_encode(array("status"=>"fail"));
+                mysqli_rollback($conn);
             }
         }
+        mysqli_commit($conn);
         echo json_encode(array("status"=>"success"));
         exit;
     }
     else{
         echo json_encode(array("status"=>"fail"));
+        mysqli_rollback($conn);
     }
 }

@@ -9,13 +9,15 @@ $conn=connect();
 
 //没有进行测试奶酪
 //无法进行规格划分--多加一个规格表
+mysqli_begin_transaction($conn);//开启一个事务
 $commodityId="".$uid.time().md5($params['name']);
 $insertComSql="INSERT INTO commodity (commodityId,description,name,slabel,suid,minus) VALUES ('".
             $commodityId."','".$params['description']."','".
             $params['name']."',".$params['label'].",".$uid.",".($params['ifActivity1']+2*$params['ifActivity2']).");";
 // echo $insertComSql;
 if(!mysqli_query($conn,$insertComSql)){
-    echo json_encode(array("status"=>$insertComSql));
+    echo json_encode(array("status"=>"fail"));
+    mysqli_rollback($conn);
     exit;
 }
 //向规格表里面插入规格
@@ -26,7 +28,8 @@ foreach($stdArray as $key=>$value){
     $stdInsertSql="INSERT INTO standard (price,name,standards,stock,commodityId) VALUES (".$dm['sort_price'].",'".$dm['name']."','".$dm['name']."',".$dm['sort_inventory'].",'".$commodityId."');";
     // echo $stdInsertSql."\n";
     if(!mysqli_query($conn,$stdInsertSql)){
-        echo json_encode(array("status"=>"fail2"));
+        echo json_encode(array("status"=>"fail"));
+        mysqli_rollback($conn);
         exit;
     }
 }
@@ -40,7 +43,8 @@ foreach($picArray as $key=>$value){
     $sql="INSERT INTO image (photo,commodityId) VALUES ('".$value['photo']."','".$commodityId."');";
     // echo $value;
     if(!mysqli_query($conn,$sql)){
-        echo json_encode(array("status"=>$sql));
+        echo json_encode(array("status"=>"fail"));
+        mysqli_rollback($conn);
         exit;
     }
 }
@@ -49,37 +53,40 @@ if($imgCount==0){
     $sql="INSERT INTO image (photo,commodityId) VALUES ('".$photo."','".$commodityId."');";
     //echo $value;    
     if(!mysqli_query($conn,$sql)){
-        echo json_encode(array("status"=>"fail4"));
+        echo json_encode(array("status"=>"fail"));
+        mysqli_rollback($conn);
         exit;
    }
 }
-
+mysqli_commit($conn);
 echo json_encode(array("status"=>"success"));
 
-function savePic($commodityId,$imgBase64){
-    //图片转存、return图片地址
-    //奶酪
-    $content="";
-    $type="";
-    if(preg_match('/^(data:\s*image\/(\w+);base64,)/',$$imgBase64,$result)){
-        $type=$result[2];
-        $content=$result[1];
-    }
-    else{
-        echo json_encode(array("status"=>"fail4"));
-        exit;
-    }
-    $repoPath="/var/www/html/php/repo/";
-    if(!file_exists($repoPath)){
-        mkdir($repoPath,0700);
-    }
-    $picName=md5($imgBase64).time().md5("".$commodityId).".{$type}";
-    $savePath=$repoPath.$picName;
-    if(!file_put_contents($savePath,base64_decode(str_replace($content,'',$imgBase64)))){
-        echo json_encode(array("status"=>"fail5"));
-        exit;
-    }
-    //奶酪
-    $picPath="http://60.205.226.43/php/repo/".$picName;
-    return $picPath;
-}
+// function savePic($commodityId,$imgBase64){
+//     //图片转存、return图片地址
+//     //奶酪
+//     $content="";
+//     $type="";
+//     if(preg_match('/^(data:\s*image\/(\w+);base64,)/',$$imgBase64,$result)){
+//         $type=$result[2];
+//         $content=$result[1];
+//     }
+//     else{
+//         echo json_encode(array("status"=>"fail"));
+//         mysqli_rollback($conn);
+//         exit;
+//     }
+//     $repoPath="/var/www/html/php/repo/";
+//     if(!file_exists($repoPath)){
+//         mkdir($repoPath,0700);
+//     }
+//     $picName=md5($imgBase64).time().md5("".$commodityId).".{$type}";
+//     $savePath=$repoPath.$picName;
+//     if(!file_put_contents($savePath,base64_decode(str_replace($content,'',$imgBase64)))){
+//         echo json_encode(array("status"=>"fail"));
+//         mysqli_rollback($conn);
+//         exit;
+//     }
+//     //奶酪
+//     $picPath="http://60.205.226.43/php/repo/".$picName;
+//     return $picPath;
+// }

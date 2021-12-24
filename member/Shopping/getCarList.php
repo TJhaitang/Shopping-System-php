@@ -20,6 +20,7 @@ while(($aoc=mysqli_fetch_assoc($result))!=NULL){
     $imgRes=mysqli_query($conn,$imgSql);
     if(!$imgRes){
         echo json_encode(array("status"=>"fail"));
+        exit;
     }
     $imgPath=mysqli_fetch_assoc($imgRes);
     if((!$imgPath['photo'])|strlen($imgPath['photo'])==0){
