@@ -33,5 +33,5 @@ $result2=mysqli_query($conn,$insertSql);
 if($result2)
 echo json_encode(array("status"=>"success"));
 else
-echo json_encode(array("status"=>"fail"));
+echo json_encode(array("status"=>$insertSql));
 }

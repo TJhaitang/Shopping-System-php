@@ -38,7 +38,7 @@ if(!mysqli_query($conn,$sql)){
     exit;
 }
 foreach($items as $key=>$value){
-    $itemSql="INSERT INTO item_order (quantity,status,orderNum,commodityId) VALUE (".$value['num'].",0,'".$orderCode."',".$value['itemId'].");";
+    $itemSql="INSERT INTO item_order (quantity,orderNum,commodityId) VALUE (".$value['num'].",'".$orderCode."',".$value['itemId'].");";
     // {
     //     //删库存
     // }

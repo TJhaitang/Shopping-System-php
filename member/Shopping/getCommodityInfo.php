@@ -9,7 +9,7 @@ $params=json_decode(file_get_contents("php://input"),true);
 /**************/
 // echo json_encode($params);
 // exit;
-$sql="SELECT * from commodity where commodityId=".$params['comId'].";";//奶酪
+$sql="SELECT * from commodity where commodityId='".$params['comId']."';";//奶酪
 $result=mysqli_query($conn,$sql);
 if(!$result){
     echo json_encode(array("status"=>"fail"));

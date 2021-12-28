@@ -8,7 +8,7 @@ $uid=getUidFromHttp("V");
 $params=json_decode(file_get_contents("php://input"),true);
 /******* */
 
-$sql="SELECT * from comment WHERE item_id IN (SELECT id FROM standard WHERE commodityId=".$params['commodityId'].");";
+$sql="SELECT * from comment WHERE item_id IN (SELECT id FROM standard WHERE commodityId='".$params['commodityId']."');";
 $result=mysqli_query($conn,$sql);
 if(!$result){
     echo json_encode(array("status"=>"fail"));

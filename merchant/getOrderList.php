@@ -27,6 +27,7 @@ if(($params['uid'])&&strlen($params['uid'])>0){
     $sql.=" AND addNum IN (SELECT add_id FROM address WHERE vuid=".$params['uid'].")";
 }
 $sql.=";";
+// $sql="SELECT * FROM orders;";
 
 $result=mysqli_query($conn,$sql);
 if(!$result){
@@ -36,8 +37,18 @@ if(!$result){
 $orderNum=0;
 $orders=array();
 
+//获取orders的详细信息
 while(($aoc=mysqli_fetch_assoc($result))!=false){//危
     $orderNum+=1;
+    $addNum=$aoc['addNum'];
+    $addSql="SELECT * from address WHERE add_id=".$addNum.";";
+    $addRes=mysqli_query($conn,$addSql);
+    if(!$addRes){
+        echo json_encode(array("status"=>"fail"));
+        exit;
+    }
+    $addr=mysqli_fetch_assoc($addRes);
+    $aoc['addr']=$addr;
     $itemSql="SELECT * FROM item_order WHERE orderNum='".$aoc['code']."';";
     $result1=mysqli_query($conn,$itemSql);
     if(!$result1){
@@ -47,8 +58,16 @@ while(($aoc=mysqli_fetch_assoc($result))!=false){//危
     $items=array();
     $itemNum=0;
     while(($itemAoc=mysqli_fetch_assoc($result1))!=NULL){
-        $itemNum+=1;
-        $comId=$itemAoc['commodityId'];
+       $itemNum+=1;
+        $itemId=$itemAoc['commodityId'];//这里的commodityid是itemid！！！！！！！
+        $comSql="SELECT * from standard WHERE id=".$itemId.";";
+        $comRes=mysqli_query($conn,$comSql);
+        if(!$comRes){
+            echo json_encode(array("status"=>"fail"));
+            exit;
+        }
+        $comAoc=mysqli_fetch_assoc($comRes);
+        $comId=$comAoc['commodityId'];
         $picSql="SELECT photo from shop where commodityId='".$comId."';";
         $picRes=mysqli_query($conn,$picSql);
         if(!$picRes){
@@ -61,10 +80,21 @@ while(($aoc=mysqli_fetch_assoc($result))!=false){//危
             $picture="http://60.205.226.43/php/repo/default.png";
         }
         $itemAoc['picture']=$picture;
+        $nameSql="SELECT name FROM commodity WHERE commodityId='".$comId."';";
+        $nameRes=mysqli_query($conn,$nameSql);
+        if(!$nameRes){
+            echo json_encode(array("status"=>"fail"));
+            exit;
+        }
+        $nameAoc=mysqli_fetch_assoc($nameRes);
+        $name=$nameAoc['name']."---".$comAoc['name'];
+        $itemAoc['comName']=$name;
         $items[$itemNum]=$itemAoc;
     }
-    $items['itemNum']=$itemNum;
+    $aoc['itemNum']=$itemNum;
     $aoc['items']=$items;
+    // $aoc['num']=number_format($aoc['num']);//当初为什么要写这个？？？没睡醒吗？
+    // $aoc['price']=number_format($aoc['price'],2);
     $orders[$orderNum]=$aoc;//危
 }
 $orders['orderNum']=$orderNum;

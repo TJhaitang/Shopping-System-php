@@ -47,12 +47,19 @@ while(($aoc=mysqli_fetch_assoc($result))!=NULL){
             $picture="http://60.205.226.43/php/repo/default.png";
         }
         $itemAoc['picture']=$picture;
+        $nameSql="SELECT name FROM commodity WHERE commodityId='".$comId."';";
+        $nameRes=mysqli_query($conn,$nameSql);
+        if(!$nameRes){
+            echo json_encode(array("status"=>"fail"));
+            exit;
+        }
+        $nameAoc=mysqli_fetch_assoc($nameRes);
+        $name=$nameAoc['name']."---".$comAoc['name'];
+        $itemAoc['comName']=$name;
         $items[$itemNum]=$itemAoc;
     }
     $items['itemNum']=$itemNum;
     $aoc['items']=$items;
-    $aoc['num']=number_format($aoc['num']);
-    $aoc['price']=number_format($aoc['price'],2);
     $orderList[$orderNum]=$aoc;
 }
 $orderList['orderNum']=$orderNum;
