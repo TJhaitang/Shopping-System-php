@@ -26,7 +26,7 @@ if(($params['id'])&&strlen($params['id'])>0){
 if(($params['uid'])&&strlen($params['uid'])>0){
     $sql.=" AND addNum IN (SELECT add_id FROM address WHERE vuid=".$params['uid'].")";
 }
-$sql.=";";
+$sql.=" AND suid=".$uid.";";
 // $sql="SELECT * FROM orders;";
 
 $result=mysqli_query($conn,$sql);

@@ -32,7 +32,7 @@ $insertSql="INSERT INTO ".($type=="S"?"merchant":"member").
     ",'".$params['province']."'".
     ",'".$params['identity']."'".
     ",'".($params['username']?$params['username']:($type=="S"?"大灰狼":"小白兔"))."'".
-    ($params['phone']?(",'".$params['phone']."'"):",'0000'").
+    ($params['phone']?(",'".$params['phone']."'"):(",'".time()."'")).
     ($params['addr']?(",'".$params['addr']."'"):",'none'").
     ($params['gender']?(",'".$params['gender']."'"):"").
     ($params['signature']?(",'".$params['signature']."'"):"").");";
@@ -41,5 +41,5 @@ $result2=mysqli_query($conn,$insertSql);
 if($result2)
 echo json_encode(array("status"=>"success"));
 else
-echo json_encode(array("status"=>"fail"));
+echo json_encode(array("status"=>$insertSql));
 }
